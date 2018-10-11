@@ -1,0 +1,7 @@
+{
+    "packages": {
+        "wubmeister/php-kit": {
+            "dev-master": { @composer.json }
+        }
+    }
+}
