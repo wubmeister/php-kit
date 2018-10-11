@@ -1,5 +1,6 @@
 {
-    "name": "PHP Kit",
+    "name": "wubmeister/php-kit",
+    "version": "0.0.1",
     "type": "library",
     "license": "GPL-3.0-or-later",
     "authors": [
