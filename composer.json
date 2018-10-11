@@ -1,0 +1,22 @@
+{
+    "name": "PHP Kit",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Wubbo Bos",
+            "email": "wubbo@wubbobos.nl",
+            "homepage": "http://wubbobos.nl",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "zendframework/zend-diactoros": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    },
+    "scripts": {
+        "test": "vendor/phpunit/phpunit/phpunit --bootstrap vendor/autoload.php"
+    }
+}
