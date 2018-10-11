@@ -13,6 +13,7 @@ abstract class AbstractResource
     protected $request;
     protected $templateResolver;
     protected $responseFormat;
+    protected $name = 'resource';
 
     public function __invoke(ServerRequestInterface $request)
     {
@@ -55,7 +56,7 @@ abstract class AbstractResource
         if ($this->responseFormat == 'html') {
             $html = $action;
             if ($this->templateResolver) {
-                $file = $this->templateResolver->resolve('resource/'.$action);
+                $file = $this->templateResolver->resolve($this->name.'/'.$action);
                 if ($file) {
                     $template = new Template($file);
                     foreach ($responseData as $key => $value) {
