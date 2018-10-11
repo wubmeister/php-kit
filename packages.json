@@ -1,7 +1,15 @@
 {
     "packages": {
         "wubmeister/php-kit": {
-            "dev-master": { @composer.json }
+            "0.0.1": {
+                "name": "wubmeister/php-kit",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/wubmeister/php-kit.git"
+                },
+                "type": "library",
+                "version": "0.0.1"
+            }
         }
     }
 }
