@@ -16,6 +16,14 @@
     "require-dev": {
         "phpunit/phpunit": "^7"
     },
+    "autoload": {
+        "psr-4": {
+            "AuthKit\\": "AuthKit/src/",
+            "CoreKit\\": "CoreKit/src/",
+            "DatabaseKit\\": "DatabaseKit/src/",
+            "TemplateKit\\": "TemplateKit/src/"
+        }
+    },
     "scripts": {
         "test": "vendor/phpunit/phpunit/phpunit --bootstrap vendor/autoload.php"
     }
