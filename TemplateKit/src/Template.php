@@ -5,7 +5,7 @@ namespace TemplateKit;
 class Template implements TemplateInterface
 {
     protected $parent;
-    protected $variables;
+    protected $variables = [];
     protected $file;
 
     public function __construct($file)
@@ -25,7 +25,7 @@ class Template implements TemplateInterface
     public function unassign(string $name)
     {
         if (isset($this->variables[$name])) {
-            unset($this->variables[$name])
+            unset($this->variables[$name]);
         }
     }
 
