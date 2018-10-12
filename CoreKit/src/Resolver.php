@@ -8,7 +8,7 @@ class Resolver
 
     public function addPath($path)
     {
-        $this->$paths[] = rtrim($path, '/') . '/';
+        $this->paths[] = rtrim($path, '/') . '/';
     }
 
     public function resolve($file)
