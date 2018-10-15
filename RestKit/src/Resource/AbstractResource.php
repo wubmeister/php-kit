@@ -23,8 +23,11 @@ abstract class AbstractResource
         $action = 'index';
         $method = $request->getMethod();
         $id = $request->getAttribute('id');
+        $query = $request->getQueryParams();
 
-        if ($method == 'POST' || $method == 'PUT') {
+        if (isset($query['mode'])) {
+            $action = $query['mode'];
+        } else if ($method == 'POST' || $method == 'PUT') {
             $action = $id ? 'update' : 'add';
         } else if ($method == 'DELETE') {
             if (!$id) {
