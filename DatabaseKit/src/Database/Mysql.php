@@ -2,6 +2,8 @@
 
 namespace DatabaseKit\Database;
 
+use DatabaseKit\Database;
+
 /**
  * Represents a MySQL/MariaDB database connection
  *
