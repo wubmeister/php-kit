@@ -29,6 +29,11 @@ class Container implements ContainerInterface
         return isset($this->entries[$id]) || isset($this->factories[$id]);
     }
 
+    public function set($id, $entry)
+    {
+        $this->entries[$id] = $entry;
+    }
+
     public function addFactory($id, callable $factory)
     {
         $this->factories[$id] = $factory;
