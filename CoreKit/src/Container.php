@@ -5,7 +5,6 @@ namespace CoreKit;
 use Psr\Container\ContainerInterface;
 use CoreKit\Container\Exception as ContainerException;
 use CoreKit\Container\NotFoundException;
-use CoreKit\Container\FactoryInterface;
 
 class Container implements ContainerInterface
 {
@@ -30,7 +29,7 @@ class Container implements ContainerInterface
         return isset($this->entries[$id]) || isset($this->factories[$id]);
     }
 
-    public function addFactory($id, FactoryInterface $factory)
+    public function addFactory($id, callable $factory)
     {
         $this->factories[$id] = $factory;
     }
