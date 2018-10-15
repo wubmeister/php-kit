@@ -68,9 +68,6 @@ class Router
 
     public function getMiddleware()
     {
-        if (!$this->middlewareClass) return null;
-
-        $rc = new \ReflectionClass($this->middlewareClass);
-        return $rc->newInstanceArgs($this->middlewareArgs);
+        return $this->middlewareClass;
     }
 }
