@@ -2,7 +2,9 @@
 
 namespace DatabaseKit\Table;
 
-class Row
+use JsonSerializable;
+
+class Row implements JsonSerializable
 {
     protected $table;
     protected $data;
@@ -37,5 +39,10 @@ class Row
         if ($this->id) {
             $this->table->delete([ 'id' => $this->id ]);
         }
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->data;
     }
 }

@@ -2,7 +2,10 @@
 
 namespace DatabaseKit\Table;
 
-class Rowset implements \Iterator
+use Iterator;
+use JsonSerializable;
+
+class Rowset implements Iterator, JsonSerializable
 {
     protected $table;
     protected $query;
@@ -34,6 +37,12 @@ class Rowset implements \Iterator
     {
         $this->rewind();
         return $this->rowCount;
+    }
+
+    public function all()
+    {
+        $this->rewind();
+        return $this->rows;
     }
 
     public function groupBy($columns)
@@ -91,5 +100,10 @@ class Rowset implements \Iterator
     public function key()
     {
         return $this->index;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->all();
     }
 }
