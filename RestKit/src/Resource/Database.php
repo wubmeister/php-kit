@@ -2,20 +2,20 @@
 
 namespace RestKit\Resource;
 
-use DatabaseKit\Database;
+use DatabaseKit\Database as Db;
 use DatabaseKit\Table;
 
 class Database extends AbstractResource
 {
     protected $table;
 
-    public function __construct(string $name, $tableName, Database $db = null)
+    public function __construct(string $name, $tableName, Db $db = null)
     {
         $this->name = $name;
 
         if ($tableName instanceof Table) {
             $this->table = $tableName;
-        } else
+        } else {
             $this->table = new \DatabaseKit\Table($tableName, $db);
         }
     }
@@ -28,12 +28,12 @@ class Database extends AbstractResource
     public function index()
     {
         $table = $this->getTable();
-        $select = $table->select();
-        $this->trigger('buildIndexQuery', $select);
-        $results = $table->fetchAll($select);
-        $this->trigger('parseIndexResult', $results);
+        // $select = $table->select();
+        // $this->trigger('buildIndexQuery', $select);
+        $results = $table->findAll();
+        // $this->trigger('parseIndexResult', $results);
 
-        return $results->fetchAll();
+        return [ 'items' => $results ];
     }
 
     public function detail($id)

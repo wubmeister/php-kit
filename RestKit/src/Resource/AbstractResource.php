@@ -1,6 +1,6 @@
 <?php
 
-namespace RestKit;
+namespace RestKit\Resource;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
@@ -37,33 +37,28 @@ abstract class AbstractResource
             throw new BadRequestException('Method ' . $method . ' not supported');
         }
 
-        $user = AuthKit\Identity::getCurrent();
-        $role = $user ? $user->role : 'Guest';
-        $isAllowed = AuthKit\Acl::isAllowed($this->name, $role, $action);
-        if (!$isAllowed) {
-            throw new NotAllowedException('The action \'' . $action . '\' is not allowed for this user');
-        }
+        // $user = AuthKit\Identity::getCurrent();
+        // $role = $user ? $user->role : 'Guest';
+        // $isAllowed = AuthKit\Acl::isAllowed($this->name, $role, $action);
+        // if (!$isAllowed) {
+        //     throw new NotAllowedException('The action \'' . $action . '\' is not allowed for this user');
+        // }
 
         if ($id) {
             $result = $this->$action($id);
         }
-        $result = $this->action();
-
-        $responseData = [
-            'success' => true,
-            'data' => $result
-        ];
+        $result = $this->$action();
 
         if ($this->responseFormat == 'html') {
-            $html = $action;
+            $html = "{$this->name}/{$action}";
             if ($this->templateResolver) {
-                $file = $this->templateResolver->resolve($this->name.'/'.$action);
+                $file = $this->templateResolver->resolve("{$this->name}/{$action}.phtml");
                 if ($file) {
                     $template = new Template($file);
-                    foreach ($responseData as $key => $value) {
+                    foreach ($result as $key => $value) {
                         $template->assign($key, $value);
                     }
-                    if ($this->layoutTemplate && ($file = $this->templateResolver->resolve($layoutTemplate))) {
+                    if ($this->layoutTemplate && ($file = $this->templateResolver->resolve($this->layoutTemplate))) {
                         $layout = new Template($file);
                         $layout->assign('content', $template);
                         $html = $layout->render();
@@ -74,6 +69,11 @@ abstract class AbstractResource
             }
             return new HtmlResponse($html);
         }
+
+        $responseData = [
+            'success' => true,
+            'data' => $result
+        ];
 
         return new JsonResponse($responseData);
     }
