@@ -51,4 +51,9 @@ class Template implements TemplateInterface
 
         return $contents;
     }
+
+    public function __toString()
+    {
+        return $this->render();
+    }
 }
