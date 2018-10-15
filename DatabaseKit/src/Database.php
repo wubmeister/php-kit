@@ -51,7 +51,7 @@ class Database
         }
         $dsn = $engine . ':' . implode(';', $dsnParts);
 
-        $pdo = new PDO($dsn, $username, $password);
+        $pdo = new \PDO($dsn, $username, $password);
 
         $className = "DatabaseKit\\Database\\" . ucfirst($engine);
 

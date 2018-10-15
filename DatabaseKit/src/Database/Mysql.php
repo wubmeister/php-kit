@@ -7,7 +7,7 @@ namespace DatabaseKit\Database;
  *
  * @author Wubbo Bos <wubbo@wubbobos.nl>
  */
-class Mysql
+class Mysql extends Database
 {
     /**
      * Quotes an identifier for safe use in SQL queries
