@@ -2,8 +2,29 @@
 
 namespace RestKit\Resource;
 
+use DatabaseKit\Database;
+use DatabaseKit\Table;
+
 class Database extends AbstractResource
 {
+    protected $table;
+
+    public function __construct(string $name, $tableName, Database $db = null)
+    {
+        $this->name = $name;
+
+        if ($tableName instanceof Table) {
+            $this->table = $tableName;
+        } else
+            $this->table = new \DatabaseKit\Table($tableName, $db);
+        }
+    }
+
+    protected function getTable()
+    {
+        return $this->table;
+    }
+
     public function index()
     {
         $table = $this->getTable();

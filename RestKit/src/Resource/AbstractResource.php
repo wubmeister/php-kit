@@ -12,6 +12,7 @@ abstract class AbstractResource
 {
     protected $request;
     protected $templateResolver;
+    protected $layoutTemplate;
     protected $responseFormat;
     protected $name = 'resource';
 
@@ -62,7 +63,13 @@ abstract class AbstractResource
                     foreach ($responseData as $key => $value) {
                         $template->assign($key, $value);
                     }
-                    $html = $template->render();
+                    if ($this->layoutTemplate && ($file = $this->templateResolver->resolve($layoutTemplate))) {
+                        $layout = new Template($file);
+                        $layout->assign('content', $template);
+                        $html = $layout->render();
+                    } else {
+                        $html = $template->render();
+                    }
                 }
             }
             return new HtmlResponse($html);
@@ -81,6 +88,11 @@ abstract class AbstractResource
     public function setTemplateResolver(Resolver $resolver)
     {
         $this->templateResolver = $resolver;
+    }
+
+    public function setLayoutTemplate(string $template)
+    {
+        $this->layoutTemplate = $template;
     }
 
     public function setResponseFormat(string $format)
