@@ -23,6 +23,7 @@
             "AuthKit\\": "AuthKit/src/",
             "CoreKit\\": "CoreKit/src/",
             "DatabaseKit\\": "DatabaseKit/src/",
+            "MailKit\\": "MailKit/src/",
             "RestKit\\": "RestKit/src/",
             "TemplateKit\\": "TemplateKit/src/"
         }
