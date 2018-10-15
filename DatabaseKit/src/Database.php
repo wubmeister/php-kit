@@ -114,6 +114,26 @@ class Database
         return $this->pdo->rollBack();
     }
 
+    public function fetchAll($sql, $params = [])
+    {
+        $statement = $this->pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            if (is_numeric($key)) {
+                $key++;
+            } else if ($key[0] != ':') {
+                $key = ':'.$key;
+            }
+            $statement->bindValue($key, $value);
+        }
+        if (!$statement->execute()) {
+            throw new Exception("Error running query");
+        }
+
+        $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $rows;
+    }
+
     public function fetchRow($sql, $params = [])
     {
         $statement = $this->pdo->prepare($sql);
