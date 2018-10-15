@@ -2,7 +2,7 @@
 
 namespace DatabaseKit\Table;
 
-class Rowset implements Iterator
+class Rowset implements \Iterator
 {
     protected $table;
     protected $query;
@@ -28,6 +28,12 @@ class Rowset implements Iterator
             ->offset($this->pagination->firstItemNumber);
 
         return $this;
+    }
+
+    public function count()
+    {
+        $this->rewind();
+        return $this->rowCount;
     }
 
     public function groupBy($columns)

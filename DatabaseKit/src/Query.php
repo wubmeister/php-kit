@@ -313,36 +313,36 @@ class Query
         switch ($what) {
             case 'SELECT':
                 $sql .= ' ' . ($this->parts['columns'] ? implode(', ', $this->parts['columns']) : '*');
-                if ($this->parts['from']) {
+                if (isset($this->parts['from'])) {
                     $sql .= ' FROM ' . $this->parts['from'];
-                    if ($this->parts['join']) {
+                    if (isset($this->parts['join'])) {
                         $sql .= ' ' . implode(' ', $this->parts['join']);
                         if ($collectBind && count($this->parts['join bind']) > 0) {
                             $bind = array_merge($bind, $this->parts['join bind']);
                         }
                     }
                 }
-                if ($this->parts['where']) {
+                if (isset($this->parts['where'])) {
                     $sql .= ' WHERE ' . $this->parts['where']->stringify($this->db);
                     if ($collectBind) {
                         $bind = array_merge($bind, $this->parts['where']->getBindValues());
                     }
                 }
-                if ($this->parts['group by']) {
+                if (isset($this->parts['group by'])) {
                     $sql .= ' GROUP BY ' . implode(', ', $this->parts['group by']);
                 }
-                if ($this->parts['having']) {
+                if (isset($this->parts['having'])) {
                     $sql .= ' HAVING ' . $this->parts['having']->stringify($this->db);
                     if ($collectBind) {
                         $bind = array_merge($bind, $this->parts['having']->getBindValues());
                     }
                 }
-                if ($this->parts['order by']) {
+                if (isset($this->parts['order by'])) {
                     $sql .= ' ORDER BY ' . implode(', ', $this->parts['order by']);
                 }
-                if ($this->parts['limit']) {
+                if (isset($this->parts['limit'])) {
                     $sql .= ' LIMIT ' . $this->parts['limit'];
-                    if ($this->parts['offset']) {
+                    if (isset($this->parts['offset'])) {
                         $sql .= ' OFFSET ' . $this->parts['offset'];
                     }
                 }

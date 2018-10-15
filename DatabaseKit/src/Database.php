@@ -96,7 +96,7 @@ class Database
 
     public function prepare($sql)
     {
-        return $this->pdo->prepare();
+        return $this->pdo->prepare($sql);
     }
 
     public function query($sql)
