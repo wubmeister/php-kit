@@ -40,9 +40,36 @@ class Form
         return $tag;
     }
 
+    public static function close()
+    {
+        return '</form>';
+    }
+
+    public static function label($name, $label, $attributes = [])
+    {
+        return '<label for="' . self::buildId($name) . '"' . self::buildAttributes($attributes) . '>' . $label . '</label>';
+    }
+
     public static function textField($name, $initValue = '', $attributes = [])
     {
         $value = isset(self::$postData[$name]) ? self::$postData[$name] : $initValue;
         return '<input type="text" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
+    }
+
+    public static function emailField($name, $initValue = '', $attributes = [])
+    {
+        $value = isset(self::$postData[$name]) ? self::$postData[$name] : $initValue;
+        return '<input type="email" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
+    }
+
+    public static function passwordField($name, $initValue = '', $attributes = [])
+    {
+        $value = isset(self::$postData[$name]) ? self::$postData[$name] : $initValue;
+        return '<input type="password" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
+    }
+
+    public static function submit($caption, $attributes = [])
+    {
+        return '<button type="submit"' . self::buildAttributes($attributes) . '>' . $caption . '</button>';
     }
 }
