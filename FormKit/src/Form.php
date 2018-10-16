@@ -13,6 +13,11 @@ class Form
         $this->name = $name;
     }
 
+    public static function addPostData($data)
+    {
+        self::$postData = array_merge(self::$postData, $data);
+    }
+
     protected static function buildAttributes($attributes)
     {
         $html = '';
@@ -43,6 +48,19 @@ class Form
     public static function close()
     {
         return '</form>';
+    }
+
+    public static function errors($name)
+    {
+        if (!isset(self::$errors[$name])) return '';
+
+        $html = '<ul class="errors">';
+        foreach (self::$errors[$name] as $key => $error) {
+            $html .= '<li>' . $error . '</li>';
+        }
+        $html .= '</ul>';
+
+        return $html;
     }
 
     public static function label($name, $label, $attributes = [])
