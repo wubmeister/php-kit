@@ -168,8 +168,6 @@ class Query
         $result = $this->tableDef($table);
         $this->parts['table'] = $result['sql'];
 
-        $this->addColumns($result['ref'], $columns);
-
         return $this;
     }
 
