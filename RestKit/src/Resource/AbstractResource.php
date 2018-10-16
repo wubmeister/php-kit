@@ -15,6 +15,7 @@ abstract class AbstractResource
     protected $layoutTemplate;
     protected $responseFormat;
     protected $name = 'resource';
+    protected $template;
 
     public function __invoke(ServerRequestInterface $request)
     {
@@ -40,6 +41,8 @@ abstract class AbstractResource
             throw new BadRequestException('Method ' . $method . ' not supported');
         }
 
+        $this->template = $action;
+
         // $user = AuthKit\Identity::getCurrent();
         // $role = $user ? $user->role : 'Guest';
         // $isAllowed = AuthKit\Acl::isAllowed($this->name, $role, $action);
@@ -53,9 +56,9 @@ abstract class AbstractResource
         $result = $this->$action();
 
         if ($this->responseFormat == 'html') {
-            $html = "{$this->name}/{$action}";
+            $html = "{$this->name}/{$this->template}";
             if ($this->templateResolver) {
-                $file = $this->templateResolver->resolve("{$this->name}/{$action}.phtml");
+                $file = $this->templateResolver->resolve("{$this->name}/{$this->template}.phtml");
                 if ($file) {
                     $template = new Template($file);
                     foreach ($result as $key => $value) {
