@@ -61,10 +61,9 @@ abstract class AbstractResource
                     foreach ($result as $key => $value) {
                         $template->assign($key, $value);
                     }
-                    if ($this->layoutTemplate && ($file = $this->templateResolver->resolve($this->layoutTemplate))) {
-                        $layout = new Template($file);
-                        $layout->assign('content', $template);
-                        $html = $layout->render();
+                    if ($this->layoutTemplate) {
+                        $this->layoutTemplate->assign('content', $template);
+                        $html = $this->layoutTemplate->render();
                     } else {
                         $html = $template->render();
                     }
@@ -93,7 +92,7 @@ abstract class AbstractResource
         $this->templateResolver = $resolver;
     }
 
-    public function setLayoutTemplate(string $template)
+    public function setLayoutTemplate(Template $template)
     {
         $this->layoutTemplate = $template;
     }
