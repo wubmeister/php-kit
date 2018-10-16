@@ -5,6 +5,7 @@ namespace FormKit;
 class Form
 {
     protected static $postData = [];
+    protected static $errors = [];
     protected static $formNames = [];
     protected static $currFormName = null;
 
@@ -16,6 +17,14 @@ class Form
     public static function addPostData($data)
     {
         self::$postData = array_merge(self::$postData, $data);
+    }
+
+    public static function addError($name, $error)
+    {
+        if (!isset(self::$errors[$name])) {
+            self::$errors[$name] = [];
+        }
+        self::$errors[$name][] = $error;
     }
 
     protected static function buildAttributes($attributes)
@@ -36,10 +45,10 @@ class Form
         return $id;
     }
 
-    public static function open(array $options)
+    public static function open(array $options = [])
     {
         self::$formNames[] = self::$currFormName = $options['name']??[];
-        $tag = '<form method="' . ($options['method']??'post') . '" action="' . $options['action'] . '" enctype="' . ($options['enctype']??'application/x-www-form-urlencoded') . '"';
+        $tag = '<form method="' . ($options['method']??'post') . '" action="' . ($options['action']??'') . '" enctype="' . ($options['enctype']??'application/x-www-form-urlencoded') . '"';
         unset($options['method'], $options['action'], $options['enctype']);
         $tag .= self::buildAttributes($options) . '>';
         return $tag;
@@ -61,6 +70,11 @@ class Form
         $html .= '</ul>';
 
         return $html;
+    }
+
+    public static function hasErrors($name)
+    {
+        return isset(self::$errors[$name]) && count(self::$errors[$name]) > 0;
     }
 
     public static function label($name, $label, $attributes = [])
