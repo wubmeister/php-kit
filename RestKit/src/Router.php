@@ -10,6 +10,7 @@ class Router
     protected $resources;
     protected $middlewareClass;
     protected $middlewareArgs;
+    protected $match;
 
     public function __construct($config, $basePath = '')
     {
@@ -40,6 +41,7 @@ class Router
                     } else {
                         $middlewareClass = $middlewareArgs = null;
                     }
+                    $this->match = $resources[$key];
                     $resources = $resources[$key]['children'] ?? [];
                 } else {
                     $tail = implode('/', array_slice($chunks, $index));
@@ -69,5 +71,10 @@ class Router
     public function getMiddleware()
     {
         return $this->middlewareClass;
+    }
+
+    public function getMatch()
+    {
+        return $this->match;
     }
 }
