@@ -1,66 +1,73 @@
 <?php
 
+namespace AuthKit\Acl;
+
 class Acl
 {
-    protected $roles = [];
-    protected $superRole = 'Super';
+    protected static $roles = [];
+    protected static $superRole = 'Super';
 
-    public function setSuperRole(string $role)
+    public static function setSuperRole(string $role)
     {
-        $this->superRole = $role;
+        self::$superRole = $role;
     }
 
-    public function allow(string $role, string $resource, string $action = '*') {
-        $this->setRule($role, $resource, $action, true);
+    public static function allow(string $role, string $resource, string $action = '*') {
+        self::setRule($role, $resource, $action, true);
     }
 
-    public function deny(string $role, string $resource, string $action = '*') {
-        $this->setRule($role, $resource, $action, false);
+    public static function deny(string $role, string $resource, string $action = '*') {
+        self::setRule($role, $resource, $action, false);
     }
 
-    protected function setRule(string $role, string $resource, string $action, bool $allowed)
+    protected static function setRule(string $role, string $resource, string $action, bool $allowed)
     {
-        if (!isset($this->roles[$role])) {
-            $this->createRole($role);
+        if (!isset(self::$roles[$role])) {
+            self::createRole($role);
         }
 
-        if (!isset($this->roles[$role]['access'][$resource])) {
-            $this->roles[$role]['access'][$resource] = [];
+        if (!isset(self::$roles[$role]['access'][$resource])) {
+            self::$roles[$role]['access'][$resource] = [];
         }
 
-        $this->roles[$role]['access'][$resource][$action] = true;
+        self::$roles[$role]['access'][$resource][$action] = true;
     }
 
-    public function createRole(string $role, $extends = null)
+    public static function createRole(string $role, $extends = null)
     {
-        $this->roles[$role] = [
+        self::$roles[$role] = [
             'extends' => $extends,
             'access' => []
         ];
     }
 
-    public function isAllowed(string $role, string $resource, string $action = '*')
+    public static function getRole(string $role)
     {
-        if ($role == $this->superRole) {
+        return self::$roles[$role];
+    }
+
+    public static function isAllowed(string $role, string $resource, string $action = '*')
+    {
+        if ($role == self::$superRole) {
             return true;
         }
 
-        if (!isset($this->roles[$role])) {
+        if (!isset(self::$roles[$role])) {
             return false;
         }
 
-        if (!isset($this->roles[$role]['access'][$resource]) || (!isset($this->roles[$role]['access'][$resource][$action]) && !isset($this->roles[$role]['access'][$resource]['*']))) {
-            if ($this->roles[$role]['extends']) {
-                return $this->isAllowed($this->roles[$role]['extends'], $resource, $action);
+        if (!isset(self::$roles[$role]['access'][$resource]) || (!isset(self::$roles[$role]['access'][$resource][$action]) && !isset(self::$roles[$role]['access'][$resource]['*']))) {
+            if (self::$roles[$role]['extends']) {
+                return self::isAllowed(self::$roles[$role]['extends'], $resource, $action);
             } else {
                 return false;
             }
         }
 
-        if (!isset($this->roles[$role]['access'][$resource][$action])) {
-            return $this->roles[$role]['access'][$resource]['*'];
+        if (!isset(self::$roles[$role]['access'][$resource][$action])) {
+            return self::$roles[$role]['access'][$resource]['*'];
         }
 
-        return $this->roles[$role]['access'][$resource][$action];
+        return self::$roles[$role]['access'][$resource][$action];
     }
 }
