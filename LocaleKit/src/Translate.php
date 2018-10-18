@@ -32,6 +32,28 @@ class Translate
         return $this->translations[$locale][$domain][$message];
     }
 
+    public function translateFormat($message, ...$args)
+    {
+        $numReplace = 0;
+        $pos = 0;
+        while (($pos = strpos($message, '%', $pos)) !== false) {
+            $numReplace++;
+            $pos++;
+        }
+
+        $replace = array_slice($args, 0, $numReplace);
+        $argTail = array_slice($args, $numReplace);
+
+        $message = $this->translate($message, count($argTail) > 0 ? $argTail[0] : 'default', count($argTail) > 1 ? $argTail[1] : null);
+
+        $pos = 0;
+        while (($pos = strpos($message, '%')) !== false) {
+            $message = substr_replace($message, array_shift($replace), $pos, 1);
+        }
+
+        return $message;
+    }
+
     protected function loadTranslations($domain, $locale)
     {
         if (!isset($this->domains[$domain])) {
