@@ -52,7 +52,7 @@ abstract class AbstractResource
         if ($this->auth) {
             $identity = $this->auth->getIdentity();
             $role = $identity ? $identity->role : 'Guest';
-            $isAllowed = Acl::isAllowed($this->name, $role, $action);
+            $isAllowed = Acl::isAllowed($role, $this->name, $action);
             if (!$isAllowed) {
                 throw new NotAllowedException('The action \'' . $action . '\' is not allowed for this user');
             }

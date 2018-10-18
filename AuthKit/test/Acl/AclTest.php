@@ -33,4 +33,12 @@ class AuthKit_Acl_AclTest extends TestCase
         $this->assertTrue(Acl::isAllowed('YourRole', 'YourResource', 'edit'));
         $this->assertFalse(Acl::isAllowed('MyRole', 'YourResource', 'edit'));
     }
+
+    public function testWildcard()
+    {
+        Acl::createRole('MyRole');
+        Acl::allow('MyRole', 'MyResource', '*');
+
+        $this->assertTrue(Acl::isAllowed('MyRole', 'MyResource', 'edit'));
+    }
 }
