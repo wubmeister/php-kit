@@ -17,7 +17,7 @@ class Auth
     /**
      * Creates a new instance
      */
-    public function __construct(Adapter $adapter, Storage $storage)
+    public function __construct(AbstractAdapter $adapter, StorageInterface $storage)
     {
         $this->adapter = $adapter;
         $this->storage = $storage;

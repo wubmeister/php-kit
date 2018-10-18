@@ -13,7 +13,7 @@ class Session implements StorageInterface
 
     public function getIdentity()
     {
-        return $_SESSION['authkit_identity'];
+        return isset($_SESSION['authkit_identity']) ? $_SESSION['authkit_identity'] : null;
     }
 
     public function hasIdentity()

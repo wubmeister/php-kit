@@ -14,15 +14,15 @@ class Database extends AbstractAdapter
     protected $saltColumn = 'salt';
     protected $db;
 
-    public function __construct(Database $db, $options = [])
+    public function __construct(\DatabaseKit\Database $db, $options = [])
     {
         $this->db = $db;
 
-        if ($options['usernameAttribute']) $this->setUsernameAttribute($options['usernameAttribute']);
-        if ($options['credentialAttribute']) $this->setCredentialAttribute($options['credentialAttribute']);
-        if ($options['usernameColumn']) $this->setUsernameColumn($options['usernameColumn']);
-        if ($options['credentialColumn']) $this->setCredentialColumn($options['credentialColumn']);
-        if ($options['saltColumn']) $this->setSaltColumn($options['saltColumn']);
+        if (isset($options['usernameAttribute'])) $this->setUsernameAttribute($options['usernameAttribute']);
+        if (isset($options['credentialAttribute'])) $this->setCredentialAttribute($options['credentialAttribute']);
+        if (isset($options['usernameColumn'])) $this->setUsernameColumn($options['usernameColumn']);
+        if (isset($options['credentialColumn'])) $this->setCredentialColumn($options['credentialColumn']);
+        if (isset($options['saltColumn'])) $this->setSaltColumn($options['saltColumn']);
     }
 
     public function setUsernameAttribute(string $usernameAttr)

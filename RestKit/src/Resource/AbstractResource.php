@@ -7,6 +7,11 @@ use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\HtmlResponse;
 use CoreKit\Resolver;
 use TemplateKit\Template;
+use RestKit\Exception\NotAllowedException;
+use RestKit\Exception\BadRequestException;
+
+use AuthKit\Auth;
+use AuthKit\Acl\Acl;
 
 abstract class AbstractResource
 {
@@ -16,6 +21,7 @@ abstract class AbstractResource
     protected $responseFormat;
     protected $name = 'resource';
     protected $template;
+    protected $auth;
 
     public function __invoke(ServerRequestInterface $request)
     {
@@ -43,12 +49,14 @@ abstract class AbstractResource
 
         $this->template = $action;
 
-        // $user = AuthKit\Identity::getCurrent();
-        // $role = $user ? $user->role : 'Guest';
-        // $isAllowed = AuthKit\Acl::isAllowed($this->name, $role, $action);
-        // if (!$isAllowed) {
-        //     throw new NotAllowedException('The action \'' . $action . '\' is not allowed for this user');
-        // }
+        if ($this->auth) {
+            $identity = $this->auth->getIdentity();
+            $role = $identity ? $identity->role : 'Guest';
+            $isAllowed = Acl::isAllowed($this->name, $role, $action);
+            if (!$isAllowed) {
+                throw new NotAllowedException('The action \'' . $action . '\' is not allowed for this user');
+            }
+        }
 
         if ($id) {
             $result = $this->$action($id);
@@ -103,6 +111,11 @@ abstract class AbstractResource
     public function setResponseFormat(string $format)
     {
         $this->responseFormat = $format;
+    }
+
+    public function setAuth(Auth $auth)
+    {
+        $this->auth = $auth;
     }
 
     abstract public function index();

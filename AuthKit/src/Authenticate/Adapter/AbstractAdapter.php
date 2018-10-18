@@ -4,7 +4,7 @@ namespace AuthKit\Authenticate\Adapter;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-class AbstractAdapter
+abstract class AbstractAdapter
 {
     const STATUS_INITIAL = 0;
     const STATUS_PENDING = 1;
