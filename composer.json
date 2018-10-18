@@ -24,6 +24,7 @@
             "CoreKit\\": "CoreKit/src/",
             "DatabaseKit\\": "DatabaseKit/src/",
             "FormKit\\": "FormKit/src/",
+            "LocaleKit\\": "LocaleKit/src/",
             "MailKit\\": "MailKit/src/",
             "RestKit\\": "RestKit/src/",
             "TemplateKit\\": "TemplateKit/src/"
