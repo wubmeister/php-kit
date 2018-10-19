@@ -58,7 +58,7 @@ class Auth
         $status = $this->adapter->getStatus();
         if ($status == AbstractAdapter::STATUS_SUCCESS) {
             $identity = $this->adapter->getIdentity();
-            $this->storage->setIdentity($identity);
+            $this->storage->storeIdentity($identity);
             if ($onSuccess) {
                 $onSuccess($identity);
             }
