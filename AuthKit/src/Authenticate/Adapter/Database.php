@@ -7,6 +7,7 @@ use AuthKit\Authenticate\Identity;
 
 class Database extends AbstractAdapter
 {
+    protected $table = 'user';
     protected $usernameAttr = 'username';
     protected $credentialAttr = 'password';
     protected $usernameColumn = 'username';
@@ -18,11 +19,17 @@ class Database extends AbstractAdapter
     {
         $this->db = $db;
 
+        if (isset($options['table'])) $this->setTable($options['table']);
         if (isset($options['usernameAttribute'])) $this->setUsernameAttribute($options['usernameAttribute']);
         if (isset($options['credentialAttribute'])) $this->setCredentialAttribute($options['credentialAttribute']);
         if (isset($options['usernameColumn'])) $this->setUsernameColumn($options['usernameColumn']);
         if (isset($options['credentialColumn'])) $this->setCredentialColumn($options['credentialColumn']);
         if (isset($options['saltColumn'])) $this->setSaltColumn($options['saltColumn']);
+    }
+
+    public function setTable(string $table)
+    {
+        $this->table = $table;
     }
 
     public function setUsernameAttribute(string $usernameAttr)
@@ -52,21 +59,42 @@ class Database extends AbstractAdapter
 
     public function handleRequest(ServerRequestInterface $request)
     {
-        $username = $request->getAttribute($this->usernameAttr);
-        $credential = $request->getAttribute($this->credentialAttr);
+        if (strtolower($request->getMethod()) != 'post') {
+            return;
+        }
+
+        $post = $request->getParsedBody();
+        $username = isset($post[$this->usernameAttr]) ? $post[$this->usernameAttr] : null;
+        $credential = isset($post[$this->credentialAttr]) ? $post[$this->credentialAttr] : null;
+
+        if (!$username) {
+            $this->error = "no_username";
+            $this->status = self::STATUS_ERROR;
+            return;
+        }
+        if (!$credential) {
+            $this->error = "no_credential";
+            $this->status = self::STATUS_ERROR;
+            return;
+        }
 
         // Fetch identity
         $sql = "SELECT * FROM " . $this->db->quoteIdentifier($this->table) . " WHERE " . $this->db->quoteIdentifier($this->usernameColumn) . " = ?";
         $user = $this->db->fetchRow($sql, [ $username ]);
 
-        $credentialHash = hash('sha256', $credential . $user[$this->saltColumn]);
-        if ($credentialHash != $user[$this->credentialColumn]) {
+        if (!$user) {
             $this->status = self::STATUS_ERROR;
-            $this->error = 'invalid_credentials';
+            $this->error = 'no_such_user';
         } else {
-            $this->status = self::SUCCESS;
-            unset($user[$this->credentialColumn], $user[$this->saltColumn]);
-            $this->identity = new Identity($user);
+            $credentialHash = hash('sha256', $credential . $user[$this->saltColumn]);
+            if ($credentialHash != $user[$this->credentialColumn]) {
+                $this->status = self::STATUS_ERROR;
+                $this->error = 'invalid_credentials';
+            } else {
+                $this->status = self::STATUS_SUCCESS;
+                unset($user[$this->credentialColumn], $user[$this->saltColumn]);
+                $this->identity = new Identity($user);
+            }
         }
     }
 }
