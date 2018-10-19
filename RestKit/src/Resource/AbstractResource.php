@@ -12,6 +12,7 @@ use RestKit\Exception\BadRequestException;
 
 use AuthKit\Auth;
 use AuthKit\Acl\Acl;
+use RestKit\Router;
 
 abstract class AbstractResource
 {
@@ -22,6 +23,7 @@ abstract class AbstractResource
     protected $name = 'resource';
     protected $template;
     protected $auth;
+    protected $router;
 
     public function __invoke(ServerRequestInterface $request)
     {
@@ -116,6 +118,11 @@ abstract class AbstractResource
     public function setAuth(Auth $auth)
     {
         $this->auth = $auth;
+    }
+
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
     }
 
     abstract public function index();

@@ -15,7 +15,7 @@ class Router
     public function __construct($config, $basePath = '')
     {
         $this->resources = $config;
-        $this->basePath = $basePath;
+        $this->basePath = rtrim($basePath, '/');
     }
 
     public function parseRequest(ServerRequestInterface $request)
@@ -43,6 +43,9 @@ class Router
                     }
                     $this->match = $resources[$key];
                     $resources = $resources[$key]['children'] ?? [];
+                    if (isset($this->match['acceptsId']) && $this->match['acceptsId'] === false) {
+                        $key = null;
+                    }
                 } else {
                     $tail = implode('/', array_slice($chunks, $index));
                     break;
@@ -76,5 +79,29 @@ class Router
     public function getMatch()
     {
         return $this->match;
+    }
+
+    public function build($name, $ids = [])
+    {
+        if (!is_array($ids)) {
+            $ids = [ $ids ];
+        }
+
+        $route = [];
+
+        if ($name != '/') {
+            $chunks = explode('/', $name);
+            $resources = $this->resources;
+            foreach ($chunks as $chunk) {
+                if (isset($resources[$chunk])) {
+                    $route[] = $chunk;
+                    if ((!isset($resources[$chunk]['acceptsId']) || $resources[$chunk]['acceptsId'] === true) && count($ids) > 0) {
+                        $route[] = array_shift($ids);
+                    }
+                }
+            }
+        }
+
+        return $this->basePath . '/' . implode($route);
     }
 }
