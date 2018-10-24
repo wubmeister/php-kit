@@ -23,7 +23,7 @@ class FlashMessage
             }
         }
 
-        return $message;
+        return $messages;
     }
 
     public static function clear()
