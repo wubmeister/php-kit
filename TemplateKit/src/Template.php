@@ -8,6 +8,9 @@ class Template implements TemplateInterface
     protected $variables = [];
     protected $file;
 
+    protected static $captureStack = [];
+    protected static $captures = [];
+
     public function __construct($file)
     {
         $this->file = $file;
@@ -46,8 +49,7 @@ class Template implements TemplateInterface
 
         ob_start();
         include $this->file;
-        $contents = ob_get_contents();
-        ob_end_clean();
+        $contents = ob_get_clean();
 
         return $contents;
     }
@@ -55,5 +57,30 @@ class Template implements TemplateInterface
     public function __toString()
     {
         return $this->render();
+    }
+
+    public function capture(string $name, $append = false)
+    {
+        self::$captureStack[] = [ 'name' => $name, 'append' => $append ];
+        ob_start();
+    }
+
+    public function endCapture()
+    {
+        $contents = ob_get_clean();
+        $capture = array_pop(self::$captureStack);
+        if ($capture['append'] && isset(self::$captures[$capture['name']])) {
+            self::$captures[$capture['name']] .= $contents;
+        } else {
+            self::$captures[$capture['name']] = $contents;
+        }
+    }
+
+    public function getCapture(string $name)
+    {
+        if (!isset(self::$captures[$name])) {
+            return '';
+        }
+        return self::$captures[$name];
     }
 }
