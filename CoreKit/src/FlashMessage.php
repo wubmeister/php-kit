@@ -16,8 +16,6 @@ class FlashMessage
         }
 
         $result = $_SESSION['flash'];
-        unset($_SESSION['flash']);
-
         $messages = [];
         foreach ($result as $message) {
             if (!$message['expires'] || $message['expires'] < time()) {
@@ -26,6 +24,14 @@ class FlashMessage
         }
 
         return $message;
+    }
+
+    public static function clear()
+    {
+        if (!isset($_SESSION) || !isset($_SESSION['flash'])) {
+            return;
+        }
+        unset($_SESSION['flash']);
     }
 
     public static function add(string $type, string $message, $expires = null)
