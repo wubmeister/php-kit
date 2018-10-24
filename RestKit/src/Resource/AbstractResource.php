@@ -72,8 +72,12 @@ abstract class AbstractResource
                 $file = $this->templateResolver->resolve("{$this->name}/{$this->template}.phtml");
                 if ($file) {
                     $template = new Template($file);
-                    foreach ($result as $key => $value) {
-                        $template->assign($key, $value);
+                    if (is_array($result)) {
+                        foreach ($result as $key => $value) {
+                            $template->assign($key, $value);
+                        }
+                    } else {
+                        $template->assign('result', $result);
                     }
                     if ($this->layoutTemplate) {
                         $this->layoutTemplate->assign('content', $template);
