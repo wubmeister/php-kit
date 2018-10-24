@@ -80,6 +80,7 @@ abstract class AbstractResource
                         $template->assign('result', $result);
                     }
                     if ($this->layoutTemplate) {
+                        $this->trigger('prepareLayout', $this->layoutTemplate);
                         $this->layoutTemplate->assign('content', $template);
                         $html = $this->layoutTemplate->render();
                     } else {
