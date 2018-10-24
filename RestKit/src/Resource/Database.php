@@ -4,6 +4,7 @@ namespace RestKit\Resource;
 
 use DatabaseKit\Database as Db;
 use DatabaseKit\Table;
+use CoreKit\FlashMessage;
 
 class Database extends AbstractResource
 {
@@ -63,6 +64,8 @@ class Database extends AbstractResource
         $item = $table->findOne([ 'id' => $id ]);
         $this->trigger('afterAdd', $item);
 
+        FlashMessage::add(FlashMessage::SUCCESS, "The item has been added");
+
         if ($this->responseFormat == 'html') {
             header('Location:' . $this->request->getUri()->getPath());
             exit;
@@ -87,6 +90,8 @@ class Database extends AbstractResource
         $item->save();
         $this->trigger('afterUpdate', $item);
 
+        FlashMessage::add(FlashMessage::SUCCESS, "The changes have been saved");
+
         return $item;
     }
 
@@ -105,6 +110,8 @@ class Database extends AbstractResource
         $this->trigger('beforeDelete', $item);
         $item->delete();
         $this->trigger('afterDelete', $item);
+
+        FlashMessage::add(FlashMessage::SUCCESS, "The item has been deleted");
 
         return [ 'id' => $id ];
     }
