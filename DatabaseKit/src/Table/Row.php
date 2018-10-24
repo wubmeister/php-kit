@@ -45,4 +45,9 @@ class Row implements JsonSerializable
     {
         return $this->data;
     }
+
+    public function getArrayCopy()
+    {
+        return $this->data;
+    }
 }

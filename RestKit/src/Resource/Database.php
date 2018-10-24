@@ -5,6 +5,7 @@ namespace RestKit\Resource;
 use DatabaseKit\Database as Db;
 use DatabaseKit\Table;
 use CoreKit\FlashMessage;
+use FormKit\Form;
 
 class Database extends AbstractResource
 {
@@ -40,14 +41,14 @@ class Database extends AbstractResource
     public function detail($id)
     {
         $table = $this->getTable();
-        $this->trigger('buildDetailQuery', $select);
+        // $this->trigger('buildDetailQuery');
         $item = $table->findOne([ 'id' => $id ]);
         if (!$item) {
             throw new NotFoundException('No item found with that ID');
         }
         $this->trigger('parseDetailResult', $item);
 
-        return $item ? $item->toArray() : null;
+        return $item ? [ 'item' => $item ] : [];
     }
 
     public function add()
@@ -58,9 +59,30 @@ class Database extends AbstractResource
 
         $table = $this->getTable();
         $data = $this->request->getParsedBody();
-        $this->trigger('beforeAdd', $data);
+        Form::addPostData($data);
+
+        $canSave = true;
+        $validator = $this->getInputValidator('create');
+        if ($validator) {
+            $validator->validate($data);
+            if (!$validator->isValid()) {
+                foreach ($validator->getErrors() as $key => $error) {
+                    Form::addError($key, $error);
+                }
+                $canSave = false;
+            }
+        }
+
+        if (!$canSave) {
+            return [];
+        }
+
+        $newData = $this->trigger('beforeAdd', $data);
+        if ($newData) $data = $newData;
+
         $id = $table->insert($data);
         if (!$id) return null;
+
         $item = $table->findOne([ 'id' => $id ]);
         $this->trigger('afterAdd', $item);
 
@@ -81,8 +103,31 @@ class Database extends AbstractResource
         if (!$item) {
             throw new Exception('No item found with that ID');
         }
+        Form::addData($item->getArrayCopy());
+
+        if ($this->request->getMethod() != 'POST') {
+            return [ 'item' => $item ];
+        }
 
         $data = $this->request->getParsedBody();
+        Form::addPostData($data);
+
+        $canSave = true;
+        $validator = $this->getInputValidator('update');
+        if ($validator) {
+            $validator->validate($data);
+            if (!$validator->isValid()) {
+                foreach ($validator->getErrors() as $key => $error) {
+                    Form::addError($key, $error);
+                }
+                $canSave = false;
+            }
+        }
+
+        if (!$canSave) {
+            return [ 'item' => $item ];
+        }
+
         $this->trigger('beforeUpdate', $data, $item);
         foreach ($data as $key => $value) {
             $item->$key = $value;
@@ -92,7 +137,12 @@ class Database extends AbstractResource
 
         FlashMessage::add(FlashMessage::SUCCESS, "The changes have been saved");
 
-        return $item;
+        if ($this->responseFormat == 'html') {
+            header('Location:' . dirname($this->request->getUri()->getPath()));
+            exit;
+        }
+
+        return [ 'item' => $item ];
     }
 
     public function delete($id)
@@ -114,5 +164,10 @@ class Database extends AbstractResource
         FlashMessage::add(FlashMessage::SUCCESS, "The item has been deleted");
 
         return [ 'id' => $id ];
+    }
+
+    protected function getInputValidator($purpose)
+    {
+        return null;
     }
 }

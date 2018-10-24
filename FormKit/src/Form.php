@@ -4,6 +4,7 @@ namespace FormKit;
 
 class Form
 {
+    protected static $data = [];
     protected static $postData = [];
     protected static $errors = [];
     protected static $formNames = [];
@@ -14,9 +15,21 @@ class Form
         $this->name = $name;
     }
 
+    public static function addData($data)
+    {
+        self::$data = array_merge(self::$data, $data);
+    }
+
     public static function addPostData($data)
     {
         self::$postData = array_merge(self::$postData, $data);
+    }
+
+    protected static function getValue($name, $defaultValue = '')
+    {
+        return isset(self::$postData[$name])
+            ? self::$postData[$name]
+            : (isset(self::$data[$name]) ? self::$data[$name] : $defaultValue);
     }
 
     public static function addError($name, $error)
@@ -84,19 +97,19 @@ class Form
 
     public static function textField($name, $initValue = '', $attributes = [])
     {
-        $value = isset(self::$postData[$name]) ? self::$postData[$name] : $initValue;
+        $value = self::getValue($name, $initValue);
         return '<input type="text" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
     }
 
     public static function emailField($name, $initValue = '', $attributes = [])
     {
-        $value = isset(self::$postData[$name]) ? self::$postData[$name] : $initValue;
+        $value = self::getValue($name, $initValue);
         return '<input type="email" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
     }
 
     public static function passwordField($name, $initValue = '', $attributes = [])
     {
-        $value = isset(self::$postData[$name]) ? self::$postData[$name] : $initValue;
+        $value = self::getValue($name, $initValue);
         return '<input type="password" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
     }
 
