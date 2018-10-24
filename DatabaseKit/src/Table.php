@@ -41,9 +41,17 @@ class Table
 
     public function insert($values)
     {
+        $columns = $this->getColumns();
+        if (in_array('created', $columns) && !isset($values['created'])) {
+            $values['created'] = date('Y-m-d H:i:s');
+        }
+
         $query = new Query($this->db);
         $query->insert()->into($this->name)->values($values);
-        $query->execute();
+        if (!$query->execute()) {
+            $err = $statement->errorInfo();
+            throw new Exception("Failed to insert data: {$err[2]}");
+        }
         return $this->db->lastInsertId();
     }
 
@@ -54,7 +62,10 @@ class Table
         if ($where) {
             $query->where($where);
         }
-        $statement = $query->execute();
+        if (!($statement = $query->execute())) {
+            $err = $statement->errorInfo();
+            throw new Exception("Failed to update data: {$err[2]}");
+        }
         return $statement->rowCount();
     }
 
@@ -67,5 +78,17 @@ class Table
         }
         $statement = $query->execute();
         return $statement->rowCount();
+    }
+
+    protected function getColumns()
+    {
+        $sql = "SHOW COLUMNS FROM " . $this->db->quoteIdentifier($this->name);
+        $rows = $this->db->fetchAll($sql);
+        $columns = [];
+        foreach ($rows as $row) {
+            $columns[] = $row['Field'];
+        }
+
+        return $columns;
     }
 }
