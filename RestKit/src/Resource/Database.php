@@ -51,6 +51,10 @@ class Database extends AbstractResource
 
     public function add()
     {
+        if ($this->request->getMethod() != 'POST') {
+            return [];
+        }
+
         $table = $this->getTable();
         $data = $this->request->getParsedBody();
         $this->trigger('beforeAdd', $data);
@@ -59,7 +63,12 @@ class Database extends AbstractResource
         $item = $table->findOne([ 'id' => $id ]);
         $this->trigger('afterAdd', $item);
 
-        return $item;
+        if ($this->responseFormat == 'html') {
+            header('Location:' . $this->request->getUri()->getPath());
+            exit;
+        }
+
+        return $item ?? [];
     }
 
     public function update($id)
@@ -83,6 +92,10 @@ class Database extends AbstractResource
 
     public function delete($id)
     {
+        if ($this->request->getMethod() != 'DELETE') {
+            return [];
+        }
+
         $table = $this->getTable();
         $item = $table->findOne([ 'id' => $id ]);
         if (!$item) {
