@@ -201,7 +201,7 @@ class Query
 
     protected function whereHaving($part, $conditions, $operator)
     {
-        if ($this->parts[$part]) {
+        if (isset($this->parts[$part])) {
             if ($this->parts[$part]->getKey == $operator) {
                 $this->parts[$part]->appendConditions($conditions);
             } else {
@@ -369,7 +369,7 @@ class Query
                     }
                 }
                 $sql .= ' ' . $this->parts['table'] . ' SET ' . implode(', ', $sets);
-                if ($this->parts['where']) {
+                if (isset($this->parts['where'])) {
                     $sql .= ' WHERE ' . $this->parts['where']->stringify($this->db);
                     if ($collectBind) {
                         $bind = array_merge($bind, $this->parts['where']->getBindValues());
@@ -379,7 +379,7 @@ class Query
 
             case 'DELETE':
                 $sql .= ' FROM ' . ($this->parts['from'] ? $this->parts['from'] : $this->parts['table']);
-                if ($this->parts['where']) {
+                if (isset($this->parts['where'])) {
                     $sql .= ' WHERE ' . $this->parts['where']->stringify($this->db);
                     if ($collectBind) {
                         $bind = $this->parts['where']->getBindValues();
