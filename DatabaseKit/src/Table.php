@@ -3,6 +3,7 @@
 namespace DatabaseKit;
 
 use DatabaseKit\Table\Rowset;
+use DatabaseKit\Table\Row;
 
 class Table
 {
