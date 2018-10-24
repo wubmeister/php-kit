@@ -98,10 +98,11 @@ class Router
                     if ((!isset($resources[$chunk]['acceptsId']) || $resources[$chunk]['acceptsId'] === true) && count($ids) > 0) {
                         $route[] = array_shift($ids);
                     }
+                    $resources = isset($resources[$chunk]['children']) ? $resources[$chunk]['children'] : [];
                 }
             }
         }
 
-        return $this->basePath . '/' . implode($route);
+        return $this->basePath . '/' . implode('/', $route);
     }
 }
