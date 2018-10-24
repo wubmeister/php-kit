@@ -60,10 +60,11 @@ abstract class AbstractResource
             }
         }
 
-        if ($id) {
+        if ($id !== null) {
             $result = $this->$action($id);
+        } else {
+            $result = $this->$action();
         }
-        $result = $this->$action();
 
         if ($this->responseFormat == 'html') {
             $html = "{$this->name}/{$this->template}";
