@@ -20,4 +20,11 @@ class Session implements StorageInterface
     {
         return isset($_SESSION['authkit_identity']);
     }
+
+    public function clearIdentity()
+    {
+        if (isset($_SESSION['authkit_identity'])) {
+            unset($_SESSION['authkit_identity']);
+        }
+    }
 }

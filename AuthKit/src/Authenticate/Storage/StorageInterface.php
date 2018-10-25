@@ -9,4 +9,5 @@ interface StorageInterface
     public function storeIdentity(Identity $identity);
     public function getIdentity();
     public function hasIdentity();
+    public function clearIdentity();
 }

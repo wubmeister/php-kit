@@ -68,4 +68,9 @@ class Auth
             }
         }
     }
+
+    public function clearIdentity()
+    {
+        $this->storage->clearIdentity();
+    }
 }
