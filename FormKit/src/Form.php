@@ -44,7 +44,7 @@ class Form
     {
         $html = '';
         foreach ($attributes as $key => $value) {
-            $html .= ' '.$key.'="'.htmlspecialchars($value).'"';
+            $html .= ' ' . $key . ($value !== true ? '="' . htmlspecialchars($value) . '"' : '');
         }
         return $html;
     }
@@ -95,10 +95,24 @@ class Form
         return '<label for="' . self::buildId($name) . '"' . self::buildAttributes($attributes) . '>' . $label . '</label>';
     }
 
+    public static function checkbox($name, $initValue = '', $attributes = [])
+    {
+        $value = self::getValue($name, $initValue);
+        $html = '<input type="hidden" name="' . $name . '" value="0" />';
+        $html .= '<input type="checkbox" name="' . $name . '" id="' . self::buildId($name) . '" value="1"' . ($value == 1 ? ' checked' : '') . self::buildAttributes($attributes) . ' />';
+        return $html;
+    }
+
     public static function textField($name, $initValue = '', $attributes = [])
     {
         $value = self::getValue($name, $initValue);
         return '<input type="text" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
+    }
+
+    public static function textarea($name, $initValue = '', $attributes = [])
+    {
+        $value = self::getValue($name, $initValue);
+        return '<textarea name="' . $name . '" id="' . self::buildId($name) . '"' . self::buildAttributes($attributes) . '>' . htmlspecialchars($value) . '</textarea>';
     }
 
     public static function emailField($name, $initValue = '', $attributes = [])
@@ -111,6 +125,18 @@ class Form
     {
         $value = self::getValue($name, $initValue);
         return '<input type="password" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
+    }
+
+    public static function select($name, $options, $initValue = '', $attributes = [])
+    {
+        // TODO: optgroups
+        $selectedValue = self::getValue($name, $initValue);
+        $html = '<select name="' . $name . '" id="' . self::buildId($name) . '"' . self::buildAttributes($attributes) . '>';
+        foreach ($options as $value => $label) {
+            $html .= '<option value="' . $value . '"' . ($value == $selectedValue ? ' selected' : '') . '>' . $label . '</option>';
+        }
+        $html .= '</select>';
+        return $html;
     }
 
     public static function submit($caption, $attributes = [])
