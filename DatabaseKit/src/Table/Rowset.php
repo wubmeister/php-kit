@@ -9,7 +9,7 @@ class Rowset implements Iterator, JsonSerializable
 {
     protected $table;
     protected $query;
-    protected $rows;
+    protected $rows = [];
     protected $index;
     protected $rowCount;
 

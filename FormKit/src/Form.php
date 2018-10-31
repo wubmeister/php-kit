@@ -51,7 +51,7 @@ class Form
 
     protected static function buildId($name)
     {
-        $id = trim(preg_replace("/[^a-zA-Z0-9]+/", "-", $name), "-");
+        $id = trim(preg_replace("/[^a-zA-Z0-9_]+/", "-", $name), "-");
         if (self::$currFormName) {
             $id = self::$currFormName . "-" . $id;
         }
