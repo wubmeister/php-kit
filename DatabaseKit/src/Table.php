@@ -57,6 +57,11 @@ class Table
 
     public function update($values, $where = null)
     {
+        $columns = $this->getColumns();
+        if (in_array('modified', $columns) && !isset($values['modified'])) {
+            $values['modified'] = date('Y-m-d H:i:s');
+        }
+
         $query = new Query($this->db);
         $query->update()->table($this->name)->values($values);
         if ($where) {
