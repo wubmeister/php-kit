@@ -26,8 +26,12 @@ class Navigation
             }
         } else {
             if (isset($data['children'])) {
-                foreach ($data['children'] as $child) {
-                    $this->children[] = new self($child);
+                foreach ($data['children'] as $identifier => $childData) {
+                    $child = new self($childData);
+                    if (!$child->identifier && !is_numeric($identifier)) {
+                        $child->identifier = $identifier;
+                    }
+                    $this->children[] = $child;
                 }
                 unset($data['children']);
             }
