@@ -76,11 +76,10 @@ class Form
     {
         if (!isset(self::$errors[$name])) return '';
 
-        $html = '<ul class="errors">';
+        $html = '';
         foreach (self::$errors[$name] as $key => $error) {
-            $html .= '<li>' . $error . '</li>';
+            $html .= $error . '<br/>';
         }
-        $html .= '</ul>';
 
         return $html;
     }
@@ -105,6 +104,9 @@ class Form
 
     public static function textField($name, $initValue = '', $attributes = [])
     {
+        if (self::hasErrors($name)) {
+            $attributes['class'] = isset($attributes['class']) ? $attributes['class'] . ' is-invalid' : 'is-invalid';
+        }
         $value = self::getValue($name, $initValue);
         return '<input type="text" name="' . $name . '" id="' . self::buildId($name) . '" value="' . $value . '"' . self::buildAttributes($attributes) . ' />';
     }
