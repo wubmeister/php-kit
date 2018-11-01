@@ -51,6 +51,7 @@ abstract class AbstractResource
 
         $this->template = $action;
 
+        $identity = null;
         if ($this->auth) {
             $identity = $this->auth->getIdentity();
             $role = $identity && isset($identity->role) ? $identity->role : 'Guest';
@@ -81,9 +82,11 @@ abstract class AbstractResource
                     }
                     if ($this->layoutTemplate) {
                         $this->trigger('prepareLayout', $this->layoutTemplate);
+                        $this->layoutTemplate->assign('identity', $identity);
                         $this->layoutTemplate->assign('content', $template);
                         $html = $this->layoutTemplate->render();
                     } else {
+                        $template->assign('identity', $identity);
                         $html = $template->render();
                     }
                 }
