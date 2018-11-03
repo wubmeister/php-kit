@@ -6,6 +6,7 @@ class Compiler
 {
     protected static $parserOptions = [];
     protected static $cacheOptions = [];
+    protected static $workingDir = __DIR__;
 
     public static function setParserOptions(array $options)
     {
@@ -55,5 +56,15 @@ class Compiler
         }
 
         return $cachename;
+    }
+
+    public static function setWorkingDir($dir)
+    {
+        self::$workingDir = rtrim($dir, '/') . '/';
+    }
+
+    public static function getWorkingDir()
+    {
+        return self::$workingDir;
     }
 }

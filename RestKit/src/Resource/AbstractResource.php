@@ -70,7 +70,7 @@ abstract class AbstractResource
         if ($this->responseFormat == 'html') {
             $html = "{$this->name}/{$this->template}";
             if ($this->templateResolver) {
-                $file = $this->templateResolver->resolve("{$this->name}/{$this->template}{phtml,tpl}");
+                $file = $this->templateResolver->resolve("{$this->name}/{$this->template}.{phtml,tpl}");
                 if ($file) {
                     $template = Template::factory($file);
                     if (is_array($result)) {

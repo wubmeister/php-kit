@@ -12,7 +12,8 @@ class Tag extends Node
     protected $attributes = [];
 
     protected static $systemTags = [
-        'translate' => Translate::class
+        'include' => IncludeTag::class,
+        'translate' => Translate::class,
     ];
 
     public function __construct(string $name, array $attributes)
