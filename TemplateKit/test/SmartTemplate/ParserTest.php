@@ -30,6 +30,16 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
         $this->assertEquals("Hello world", $document->getPhpCode());
     }
 
+    public function testExpressionArgument()
+    {
+        Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
+        $parser = Compiler::getParser();
+
+        $document = $parser->parse("{translate 'The message'}");
+
+        $this->assertEquals("<?php echo _('The message'); ?>", $document->getPhpCode());
+    }
+
     public function testIfElseIfElse()
     {
         Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
@@ -39,15 +49,15 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
 
         $this->assertInstanceOf(TemplateKit\SmartTemplate\Node\Node::class, $document);
         $this->assertEquals(
-            "<?php if (\$first): ?>First<?php elseif (\$second): ?>Second<?php else: ?>Third<?php endif; ?>", 
+            "<?php if (\$first): ?>First<?php elseif (\$second): ?>Second<?php else: ?>Third<?php endif; ?>",
             $document->getPhpCode()
         );
 
-        $document = $parser->parse("{if \$first and \$second}First and second{else}Third{/if}");
+        $document = $parser->parse("{if \$firstorsecond and \$second}First and second{else}Third{/if}");
 
         $this->assertInstanceOf(TemplateKit\SmartTemplate\Node\Node::class, $document);
         $this->assertEquals(
-            "<?php if (\$first && \$second): ?>First and second<?php else: ?>Third<?php endif; ?>", 
+            "<?php if (\$firstorsecond && \$second): ?>First and second<?php else: ?>Third<?php endif; ?>",
             $document->getPhpCode()
         );
     }
@@ -61,7 +71,7 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
 
         $this->assertInstanceOf(TemplateKit\SmartTemplate\Node\Node::class, $document);
         $this->assertEquals(
-            "<?php foreach (\$collection as \$item): ?><?php echo \$item->name; ?><?php endforeach; ?>", 
+            "<?php foreach (\$collection as \$item): ?><?php echo \$item->name; ?><?php endforeach; ?>",
             $document->getPhpCode()
         );
 
@@ -69,7 +79,7 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
 
         $this->assertInstanceOf(TemplateKit\SmartTemplate\Node\Node::class, $document);
         $this->assertEquals(
-            "<?php foreach (\$collection as \$index => \$item): ?><?php echo \$index; ?>: <?php echo \$item->name; ?><?php endforeach; ?>", 
+            "<?php foreach (\$collection as \$index => \$item): ?><?php echo \$index; ?>: <?php echo \$item->name; ?><?php endforeach; ?>",
             $document->getPhpCode()
         );
     }
