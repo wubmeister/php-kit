@@ -4,6 +4,7 @@ namespace TemplateKit\SmartTemplate\Node\Tag;
 
 use CoreKit\Resolver;
 use TemplateKit\SmartTemplate\Node\Node;
+use TemplateKit\SmartTemplate\ExpressionAttribute;
 
 class Tag extends Node
 {
@@ -51,5 +52,24 @@ class Tag extends Node
         }
 
         return new Tag($name, $attributes);
+    }
+
+    protected function getAttributesString()
+    {
+        $str = '[';
+        $index = 0;
+        foreach ($this->attributes as $key => $value) {
+            if ($index > 0) $str .= ', ';
+            $str .= '"' . $key . '" => ';
+            if (is_null($value)) $str .= 'null';
+            else if (is_bool($value)) $str .= $value ? 'true' : 'false';
+            else if (is_numeric($value)) $str .= $value;
+            else if (is_string($value)) $str .= '"' . $value . '"';
+            else if ($value instanceof ExpressionAttribute) $str .= $value;
+            $index++;
+        }
+        $str .= ']';
+
+        return $str;
     }
 }

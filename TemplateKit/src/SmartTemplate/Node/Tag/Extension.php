@@ -15,25 +15,6 @@ class Extension extends Tag
         $this->includes[] = $file;
     }
 
-    protected function getAttributesString()
-    {
-        $str = '[';
-        $index = 0;
-        foreach ($this->attributes as $key => $value) {
-            if ($index > 0) $str .= ', ';
-            $str .= '"' . $key . '" => ';
-            if (is_null($value)) $str .= 'null';
-            if (is_bool($value)) $str .= $value ? 'true' : 'false';
-            else if (is_numeric($value)) $str .= $value;
-            else if (is_string($value)) $str .= $value;
-            else if ($value instanceof ExpressionAttribute) $str .= $value->getLiteral();
-            $index++;
-        }
-        $str .= ']';
-
-        return $str;
-    }
-
     public function getPhpCode()
     {
         if ($this->isSelfClosing) {
