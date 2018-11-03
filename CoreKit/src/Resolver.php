@@ -15,8 +15,9 @@ class Resolver
     {
         $file = ltrim($file, '/');
         foreach ($this->paths as $path) {
-            if (file_exists($path.$file)) {
-                return $path.$file;
+            $glob = glob($path.$file, GLOB_BRACE);
+            if (count($glob) > 0) {
+                return $glob[0];
             }
         }
 

@@ -49,7 +49,7 @@ abstract class AbstractResource
             throw new BadRequestException('Method ' . $method . ' not supported');
         }
 
-        $this->template = $action . '.phtml';
+        $this->template = $action;
 
         $identity = null;
         if ($this->auth) {
@@ -70,7 +70,7 @@ abstract class AbstractResource
         if ($this->responseFormat == 'html') {
             $html = "{$this->name}/{$this->template}";
             if ($this->templateResolver) {
-                $file = $this->templateResolver->resolve("{$this->name}/{$this->template}");
+                $file = $this->templateResolver->resolve("{$this->name}/{$this->template}{phtml,tpl}");
                 if ($file) {
                     $template = Template::factory($file);
                     if (is_array($result)) {
