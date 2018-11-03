@@ -21,10 +21,9 @@ class Expression
         $newExp = new Expression();
         foreach ($this->parts as $part) {
             if ($part['type'] == 'part') {
-                $part['content'] = strtr($part['content'], [
-                    'and' => '&&',
-                    'or' => '||'
-                ]);
+                $part['content'] = preg_replace_callback('/\s(and|or)\s/i', function($match) {
+                    return $match[1] == 'and' ? ' && ' : ' || ';
+                }, $part['content']);
             }
             $newExp->parts[] = $part;
         }

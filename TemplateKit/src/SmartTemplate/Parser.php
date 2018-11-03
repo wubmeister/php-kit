@@ -8,7 +8,7 @@ use TemplateKit\SmartTemplate\Node\Content as ContentNode;
 use TemplateKit\SmartTemplate\Node\Comment as CommentNode;
 use TemplateKit\SmartTemplate\Node\Expression as ExpressionNode;
 use TemplateKit\SmartTemplate\Node\Control as ControlNode;
-use TemplateKit\SmartTemplate\Node\Tag;
+use TemplateKit\SmartTemplate\Node\Tag\Tag;
 use TemplateKit\SmartTemplate\Node\IfSequence;
 
 class Parser
@@ -181,15 +181,20 @@ class Parser
                                 break;
                             }
 
-                            $match = $this->read("[^=\s\/$rd]+");
-                            $attributeName = $match[0];
-                            if ($match = $this->read("=(\"[^\"]+\"|'[^']+'|[^\s$rd]+)")) {
-                                $attributeValue = $match[0] != '"' && $match[0] != '\'' ? new ExpressionAttribute($match[1]) : trim($match[1], '"\'');
+                            if ($match = $this->read("[a-zA-Z][a-zA-Z0-9\-_]*")) {
+                                var_dump($match);
+                                // $match = $this->read("[^=\s\/$rd]+");
+                                $attributeName = $match[0];
+                                if ($match = $this->read("=(\"[^\"]+\"|'[^']+'|[^\s$rd]+)")) {
+                                    $attributeValue = $match[0] != '"' && $match[0] != '\'' ? new ExpressionAttribute($match[1]) : trim($match[1], '"\'');
+                                } else {
+                                    $attributeValue = true;
+                                }
+                                $attributes[$attributeName] = $attributeValue;
+                                $this->read("\s*");
                             } else {
-                                $attributeValue = true;
+                                $attributes['expression'] = $this->readExpression();
                             }
-                            $attributes[$attributeName] = $attributeValue;
-                            $this->read("\s*");
                         }
 
                         if ($endTag) {

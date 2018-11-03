@@ -32,10 +32,10 @@ class Compiler
             throw new \Exception("Cache dir not set");
         }
 
-        $cachename = rtrim(self::$cacheOptions['cacheDir']) . '/' . 
+        $cachename = rtrim(self::$cacheOptions['cacheDir']) . '/' .
             md5($filename) . '_' . basename($filename, '.tpl') . '.php';
 
-        if (!file_exists($cachename) || filemtime($cachename) < filemtime($filemtime)) {
+        if (!file_exists($cachename) || filemtime($cachename) < filemtime($filename)) {
             // Parse template
             $parser = self::getParser();
             $document = $parser->parse(file_get_contents($filename));
