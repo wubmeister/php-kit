@@ -7,7 +7,6 @@ use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\HtmlResponse;
 use CoreKit\Resolver;
 use TemplateKit\Template;
-use TemplateKit\SmartTemplate\SmartTemplate;
 use RestKit\Exception\NotAllowedException;
 use RestKit\Exception\BadRequestException;
 
@@ -73,11 +72,7 @@ abstract class AbstractResource
             if ($this->templateResolver) {
                 $file = $this->templateResolver->resolve("{$this->name}/{$this->template}");
                 if ($file) {
-                    if (pathinfo($file, PATHINFO_EXTENSION) == 'tpl') {
-                        $template = new SmartTemplate($file);
-                    } else {
-                        $template = new Template($file);
-                    }
+                    $template = Template::factory($file);
                     if (is_array($result)) {
                         foreach ($result as $key => $value) {
                             $template->assign($key, $value);
