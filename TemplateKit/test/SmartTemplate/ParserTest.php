@@ -30,14 +30,26 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
         $this->assertEquals("Hello world", $document->getPhpCode());
     }
 
+    public function testExpressionTag()
+    {
+        Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
+        $parser = Compiler::getParser();
+
+        $document = $parser->parse("{\$variable}");
+        $this->assertEquals("<?php echo \$variable; ?>", $document->getPhpCode());
+
+        $document = $parser->parse("{\$variable ? '1' : '2'}");
+        $this->assertEquals("<?php echo \$variable ? '1' : '2'; ?>", $document->getPhpCode());
+    }
+
     public function testExpressionArgument()
     {
         Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
         $parser = Compiler::getParser();
 
-        $document = $parser->parse("{translate 'The message'}");
+        $document = $parser->parse("<p>{translate 'The message'}</p>");
 
-        $this->assertEquals("<?php echo _('The message'); ?>", $document->getPhpCode());
+        $this->assertEquals("<p><?php echo _('The message'); ?></p>", $document->getPhpCode());
     }
 
     public function testIfElseIfElse()

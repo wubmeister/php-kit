@@ -60,7 +60,7 @@ class Parser
             // Read until string literal or right delimiter, whichever comes first
             if ($match = $this->read("([^\"'$rd]*)(\"|'|$rd)")) {
                 // Found right delimiter
-                $expression->append($match[1]);
+                if (!empty($match[1])) $expression->append($match[1]);
                 if ($match[2] == $this->rightDelimiter) {
                     break;
                 }
@@ -182,7 +182,6 @@ class Parser
                             }
 
                             if ($match = $this->read("[a-zA-Z][a-zA-Z0-9\-_]*")) {
-                                var_dump($match);
                                 // $match = $this->read("[^=\s\/$rd]+");
                                 $attributeName = $match[0];
                                 if ($match = $this->read("=(\"[^\"]+\"|'[^']+'|[^\s$rd]+)")) {
@@ -194,6 +193,7 @@ class Parser
                                 $this->read("\s*");
                             } else {
                                 $attributes['expression'] = $this->readExpression();
+                                break;
                             }
                         }
 
