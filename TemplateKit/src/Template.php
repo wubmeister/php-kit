@@ -2,6 +2,9 @@
 
 namespace TemplateKit;
 
+use TemplateKit\SmartTemplate\SmartTemplate;
+
+
 class Template implements TemplateInterface
 {
     protected $parent;
@@ -14,6 +17,17 @@ class Template implements TemplateInterface
     public function __construct($file)
     {
         $this->file = $file;
+    }
+
+    public static function factory($file)
+    {
+        switch (pathinfo($file, PATHINFO_EXTENSION)) {
+            case 'tpl':
+                return new SmartTemplate($file);
+
+            default:
+                return new Template($file);
+        }
     }
 
     public function assign(string $name, $value)
