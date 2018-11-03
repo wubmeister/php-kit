@@ -22,6 +22,25 @@ class Node
         foreach ($this->children as $child) {
             $php .= $child->getPhpCode();
         }
+
+        return $php;
+    }
+
+    public function getPhpRootCode()
+    {
+        $php = $this->getPhpCode();
+
+        if (preg_match_all('/\buse ([a-zA-Z0-9_\\\\]+);/', $php, $matches, PREG_SET_ORDER)) {
+            $uses = [];
+            foreach ($matches as $match) {
+                $uses[] = $match[1];
+            }
+            $php = preg_replace('/\buse ([a-zA-Z0-9_\\\\]+);/', '', $php);
+            $php = "<?php" . PHP_EOL . "use " . implode(";\nuse ", array_unique($uses)) . ";\n?>" . PHP_EOL . $php;
+        }
+
+        $php = preg_replace('/<\?php\s*\?>/', '', $php);
+
         return $php;
     }
 
