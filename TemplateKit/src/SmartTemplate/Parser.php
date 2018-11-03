@@ -185,7 +185,7 @@ class Parser
                                 // $match = $this->read("[^=\s\/$rd]+");
                                 $attributeName = $match[0];
                                 if ($match = $this->read("=(\"[^\"]+\"|'[^']+'|[^\s$rd]+)")) {
-                                    $attributeValue = $match[0] != '"' && $match[0] != '\'' ? new ExpressionAttribute($match[1]) : trim($match[1], '"\'');
+                                    $attributeValue = $match[1][0] != '"' && $match[1][0] != '\'' ? new ExpressionAttribute($match[1]) : trim($match[1], '"\'');
                                 } else {
                                     $attributeValue = true;
                                 }

@@ -38,9 +38,12 @@ class Compiler
 
         if (!file_exists($cachename) || filemtime($cachename) < filemtime($filename)) {
             // Parse template
+            $wd = self::getWorkingDir();
+            self::setWorkingDir(dirname($filename));
             $parser = self::getParser();
             $document = $parser->parse(file_get_contents($filename));
-            $phpCode = $document->getPhpCode();
+            $phpCode = $document->getPhpRootCode();
+            self::setWorkingDir($wd);
 
             // Add all includes
             $inc = '';

@@ -11,8 +11,9 @@ class IncludeTag extends Tag
     public function getPhpCode()
     {
         $file = trim((string)$this->attributes['expression'], '"\'');
+        $wd = Compiler::getWorkingDir();
+
         if (pathinfo($file, PATHINFO_EXTENSION) == 'tpl') {
-            $wd = Compiler::getWorkingDir();
             $filename = Compiler::getWorkingDir() . $file;
             if (!file_exists($filename)) {
                 throw new \Exception("File not found: {$filename}");
@@ -25,6 +26,6 @@ class IncludeTag extends Tag
             return $php;
         }
 
-        return '<?php include "' . $file . '"; ?>';
+        return '<?php include "' . $wd.$file . '"; ?>';
     }
 }

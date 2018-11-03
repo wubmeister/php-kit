@@ -4,6 +4,8 @@ namespace TemplateKit\SmartTemplate\Node\Tag;
 
 class PhpTemplate extends Tag
 {
+    public $isSelfClosing = true;
+
     protected $file;
 
     public function __construct($name, $file, $attributes)
@@ -14,6 +16,8 @@ class PhpTemplate extends Tag
 
     public function getPhpCode()
     {
-        return file_get_contents($this->file);
+        $php = '<?php $attr = ' . $this->getAttributesString() . '; ?>' . PHP_EOL;
+        $php .= file_get_contents($this->file);
+        return $php;
     }
 }
