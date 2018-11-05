@@ -72,4 +72,12 @@ class Tag extends Node
 
         return $str;
     }
+
+    public function dehydrate()
+    {
+        $dry = parent::dehydrate();
+        $dry["attributes"] = $this->attributes;
+
+        return $dry;
+    }
 }

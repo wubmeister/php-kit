@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 use CoreKit\Resolver;
 
-class TemplateKit_TemplateTest extends TestCase
+class TemplateKit_ResolverTest extends TestCase
 {
     public function testResolve()
     {

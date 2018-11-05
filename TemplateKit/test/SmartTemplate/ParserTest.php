@@ -57,10 +57,11 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
         Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
         $parser = Compiler::getParser();
 
-        $document = $parser->parse("<p>{include 'data/included.phtml'}</p>");
-        $this->assertEquals("<p><?php include \"data/included.phtml\"; ?></p>", $document->getPhpCode());
-
         Compiler::setWorkingDir(dirname(__DIR__));
+
+        $document = $parser->parse("<p>{include 'data/included.phtml'}</p>");
+        $this->assertEquals("<p><?php include \"" . dirname(__DIR__) . "/data/included.phtml\"; ?></p>", $document->getPhpCode());
+
         $document = $parser->parse("<p>{include 'data/included.tpl'}</p>");
         $this->assertEquals("<p>I am included\n</p>", $document->getPhpCode());
     }

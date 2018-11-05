@@ -53,4 +53,18 @@ class Node
 
         return $includes;
     }
+
+    public function dehydrate()
+    {
+        $dry = [
+            "tag" => $this->name
+        ];
+        if (count($this->children)) {
+            $dry['children'] = [];
+            foreach ($this->children as $child) {
+                $dry['children'][] = $child->dehydrate();
+            }
+        }
+        return $dry;
+    }
 }
