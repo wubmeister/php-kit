@@ -30,6 +30,19 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
         $this->assertEquals("Hello world", $document->getPhpCode());
     }
 
+    public function testNamespace()
+    {
+        Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
+        $parser = Compiler::getParser();
+
+        $document = $parser->parse("{namespace:tagname}");
+
+        $this->assertInstanceOf(TemplateKit\SmartTemplate\Node\Node::class, $document);
+        $this->assertInstanceOf(TemplateKit\SmartTemplate\Node\Tag\Tag::class, $document->children[0]);
+        $this->assertEquals("tagname", $document->children[0]->name);
+        $this->assertEquals("namespace", $document->children[0]->namespace);
+    }
+
     public function testExpressionTag()
     {
         Compiler::setParserOptions([ 'resolver' => $this->resolver ]);

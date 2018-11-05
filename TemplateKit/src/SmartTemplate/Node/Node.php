@@ -5,6 +5,7 @@ namespace TemplateKit\SmartTemplate\Node;
 class Node
 {
     public $name = '';
+    public $namespace = null;
     public $children = [];
 
     protected $includes = [];

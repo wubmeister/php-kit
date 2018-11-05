@@ -19,19 +19,26 @@ class Tag extends Node
 
     public function __construct(string $name, array $attributes)
     {
-        $this->name = $name;
+        if (strpos($name, ':') !== false) {
+            $pair = explode(':', $name, 2);
+            $this->name = $pair[1];
+            $this->namespace = $pair[0];
+        } else {
+            $this->name = $name;
+        }
         $this->attributes = $attributes;
     }
 
     public static function factory(string $name, array $attributes, Resolver $resolver)
     {
+        $resName = str_replace(':', '/', $name);
         if (isset(self::$systemTags[$name])) {
             return new self::$systemTags[$name]($name, $attributes);
-        } if ($file = $resolver->resolve($name.'.tpl')) {
+        } if ($file = $resolver->resolve($resName.'.tpl')) {
             return new Subtemplate($name, $file, $attributes);
-        } else if ($file = $resolver->resolve($name.'.phtml')) {
+        } else if ($file = $resolver->resolve($resName.'.phtml')) {
             return new PhpTemplate($name, $file, $attributes);
-        } else if ($file = $resolver->resolve(ucfirst($name).'.php')) {
+        } else if ($file = $resolver->resolve(str_replace(' ', '/', ucwords(str_replace(':', ' ', $name))).'.php')) {
             $contents = file_get_contents($file);
             $namespace = '';
             $className = ucfirst($name);
