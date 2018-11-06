@@ -8,7 +8,7 @@ use TemplateKit\SmartTemplate\ExpressionAttribute;
 
 class Tag extends Node
 {
-    public $isSelfClosing = false;
+    public $isSelfClosing = true;
 
     protected $attributes = [];
 

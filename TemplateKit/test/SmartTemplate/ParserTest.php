@@ -122,4 +122,15 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
             $document->getPhpCode()
         );
     }
+
+    public function testUndefinedTags()
+    {
+        $parser = Compiler::getParser();
+        $document = $parser->parse('{parent}{child}{child}{/parent}');
+
+        $parent = $document->children[0];
+
+        $this->assertInstanceOf(\TemplateKit\SmartTemplate\Node\Tag\PhpTemplate::class, $parent);
+        $this->assertCount(2, $parent->children);
+    }
 }
