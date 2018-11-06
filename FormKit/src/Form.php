@@ -44,7 +44,9 @@ class Form
     {
         $html = '';
         foreach ($attributes as $key => $value) {
-            $html .= ' ' . $key . ($value !== true ? '="' . htmlspecialchars($value) . '"' : '');
+            if ($value !== false) {
+                $html .= ' ' . $key . ($value !== true ? '="' . htmlspecialchars($value) . '"' : '');
+            }
         }
         return $html;
     }
