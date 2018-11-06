@@ -53,7 +53,8 @@ class Tag extends Node
                 $className = $namespace.'\\'.$className;
             }
             $tag = new Extension($name, $file, $className, $attributes);
-            if ($extends == 'InlineFunction') $tag->isSelfClosing = true;
+            if ($extends == 'Inline') $tag->isSelfClosing = true;
+            elseif ($extends == 'CustomBlock') $tag->handleChildren = "manual";
 
             return $tag;
         }
