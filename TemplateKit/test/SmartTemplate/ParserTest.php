@@ -79,6 +79,24 @@ class TemplateKit_SmartTemplate_ParserTest extends TestCase
         $this->assertEquals("<p>I am included\n</p>", $document->getPhpCode());
     }
 
+    public function testLiteral()
+    {
+        Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
+        $parser = Compiler::getParser();
+
+        $document = $parser->parse("{literal}This is {some} literal content{/literal}");
+        $this->assertEquals("This is {some} literal content", $document->getPhpCode());
+    }
+
+    public function testCapture()
+    {
+        Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
+        $parser = Compiler::getParser();
+
+        $document = $parser->parse("{capture 'name'}This is captured content{/capture}");
+        $this->assertEquals("<?php \$this->capture(\"name\"); ?>This is captured content<?php \$this->endCapture(); ?>", $document->getPhpCode());
+    }
+
     public function testIfElseIfElse()
     {
         Compiler::setParserOptions([ 'resolver' => $this->resolver ]);
